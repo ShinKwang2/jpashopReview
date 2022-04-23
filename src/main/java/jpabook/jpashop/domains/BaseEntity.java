@@ -7,16 +7,30 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
+@Getter
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-@Getter
-public class BaseEntity {
+public abstract class BaseEntity {
 
     @CreatedDate
-    private LocalDateTime createDate;
+    private String createDate;
 
     @LastModifiedDate
-    private LocalDateTime lastModifiedDate;
+    private String lastModifiedDate;
+
+    @PrePersist
+    public void onPrePersist() {
+        this.createDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm"));
+        this.lastModifiedDate = this.createDate;
+    }
+
+    @PreUpdate
+    public void onPreUpdate() {
+        this.lastModifiedDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm"));
+    }
 }

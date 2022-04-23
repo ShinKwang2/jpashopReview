@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Getter
@@ -32,24 +33,31 @@ public class Order extends BaseEntity {
     /**
      * todo 나중에 단방향으로 리팩터링 하기
      */
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderItem> orderItems = new ArrayList<>();
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "delivery_id")
     private Delivery delivery;
 
 
-
     @Builder
-    public Order(Member member, List<OrderItem> orderItems, Delivery delivery) {
+    public Order(Member member, Delivery delivery, OrderItem... orderItemList) {
         this.member = member;
-        this.orderItems = orderItems;
         changeDelivery(delivery); // 양방향 편의 메서드
+        addOrderItem(orderItemList); // 양방향 편의 메서드
         this.status = OrderStatus.ORDERED_STATUS;
     }
 
-    // 양방향 연관관계 편의 메서드
+    //== 양방향 연관관계 편의 메서드 ==//
+    private void addOrderItem(OrderItem... orderItemList) {
+        Arrays.stream(orderItemList)
+                .forEach(orderItem -> this.orderItems.add(orderItem));
+
+        Arrays.stream(orderItemList)
+                .forEach(orderItem -> orderItem.changeOrder(this));
+    }
+
     private void changeDelivery(Delivery delivery) {
         this.delivery = delivery;
         delivery.changeOrder(this);

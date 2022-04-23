@@ -1,5 +1,6 @@
-package jpabook.jpashop.domains;
+package jpabook.jpashop.domains.category;
 
+import jpabook.jpashop.domains.BaseEntity;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -7,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Getter
@@ -26,7 +28,7 @@ public class Category extends BaseEntity {
     /**
      * 셀프 양방향 연관관계
      */
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
     private Category parent;
 
@@ -34,18 +36,25 @@ public class Category extends BaseEntity {
     private List<Category> children = new ArrayList<>();
 
     @Builder
-
-    public Category(String categoryName, List<CategoryItem> categoryItems) {
+    public Category(String categoryName, Category parent) {
         this.categoryName = categoryName;
-        this.categoryItems = categoryItems;
+        this.parent = parent;
     }
 
     /**
      * 셀프 양방향 연관관계 편의 메서드
      */
-    private void changeChild(Category parent) {
+    public void addParentCategory(Category parent) {
         this.parent = parent;
         parent.getChildren().add(this);
+    }
+
+    public void addCategoryItem(CategoryItem... categoryItemList) {
+        Arrays.stream(categoryItemList)
+                .forEach(categoryItem -> categoryItems.add(categoryItem));
+
+        Arrays.stream(categoryItemList)
+                .forEach(categoryItem -> categoryItem.addCategory(this));
     }
 
 

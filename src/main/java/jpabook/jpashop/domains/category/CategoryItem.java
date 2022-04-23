@@ -1,4 +1,4 @@
-package jpabook.jpashop.domains;
+package jpabook.jpashop.domains.category;
 
 import jpabook.jpashop.domains.item.Item;
 import lombok.AccessLevel;
@@ -27,18 +27,15 @@ public class CategoryItem {
 
     @Builder
     public CategoryItem(Category category, Item item) {
-        changeCategory(category);   //양방향 편의메서드
-        changeItem(item);           //양방향 편의메서드
+        this.category = category;
+        this.item = item;
     }
 
-    // 양방향 편의 메서드 - Category
-    private void changeCategory(Category category) {
+    //==양방향 편의 메서드==//
+    public void addCategory(Category category) {
         this.category = category;
-        category.getCategoryItems().add(this);
     }
-    // 양방향 편의 메서드 - Item
-    private void changeItem(Item item) {
+    public void addItem(Item item) {
         this.item = item;
-        item.getCategoryItems().add(this);
     }
 }

@@ -1,5 +1,6 @@
 package jpabook.jpashop.domains.order;
 
+import jpabook.jpashop.domains.BaseEntity;
 import jpabook.jpashop.domains.item.Item;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -11,7 +12,7 @@ import javax.persistence.*;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class OrderItem {
+public class OrderItem extends BaseEntity {
 
     @Id @GeneratedValue
     @Column(name = "order_item_id")
@@ -29,16 +30,14 @@ public class OrderItem {
     private int orderQuantity; //주문 수량
 
     @Builder
-    public OrderItem(Item item, Order order, int orderPrice, int orderQuantity) {
+    public OrderItem(Item item, int orderPrice, int orderQuantity) {
         this.item = item;
         this.orderPrice = orderPrice;
         this.orderQuantity = orderQuantity;
-        changeOrder(order); // 양방향 연관관계 편의 메서드
     }
 
     //양방향 연관관계 편의메서드 - Order
-    private void changeOrder(Order order) {
+    public void changeOrder(Order order) {
         this.order = order;
-        order.getOrderItems().add(this);
     }
 }

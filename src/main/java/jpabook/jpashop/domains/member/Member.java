@@ -18,14 +18,21 @@ public class Member extends BaseEntity {
     @Column(name = "member_id")
     private Long id;
 
+    private String authId;
+    private String authPassword;
+
     private String name;
+    private String phone;
 
     @Embedded
     private Address address;
 
     @Builder
-    private Member(String name, Address address) {
+    public Member(String authId, String authPassword, String name, String phone, Address address) {
+        this.authId = authId;
+        this.authPassword = authPassword;
         this.name = name;
+        this.phone = phone;
         this.address = address;
     }
 }
