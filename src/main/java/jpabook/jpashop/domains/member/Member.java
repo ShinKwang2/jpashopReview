@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 
 @Getter
@@ -35,4 +36,5 @@ public class Member extends BaseEntity {
         this.phone = phone;
         this.address = address;
     }
+
 }

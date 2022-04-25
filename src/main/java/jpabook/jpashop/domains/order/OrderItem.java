@@ -40,4 +40,26 @@ public class OrderItem extends BaseEntity {
     public void changeOrder(Order order) {
         this.order = order;
     }
+
+    //==비즈니스 로직==//
+    /**
+     * 주문 아이템 취소 - 재고 수량 원복
+     */
+    public void cancel() {
+        getItem().addStock(this.orderQuantity);
+    }
+
+    /**
+     * 주문 상품 전체 가격 조회
+     */
+    public int getTotalPrice() {
+        return getOrderPrice() * getOrderQuantity();
+    }
+
+    /**
+     * 주문 아이템 생성 - 재고 수량 빼기
+     */
+    public void removeStockQuantity() {
+        this.item.removeStock(orderQuantity);
+    }
 }

@@ -22,9 +22,6 @@ public class Category extends BaseEntity {
 
     private String categoryName;
 
-    @OneToMany(mappedBy = "category")
-    private List<CategoryItem> categoryItems = new ArrayList<>();
-
     /**
      * 셀프 양방향 연관관계
      */
@@ -48,14 +45,4 @@ public class Category extends BaseEntity {
         this.parent = parent;
         parent.getChildren().add(this);
     }
-
-    public void addCategoryItem(CategoryItem... categoryItemList) {
-        Arrays.stream(categoryItemList)
-                .forEach(categoryItem -> categoryItems.add(categoryItem));
-
-        Arrays.stream(categoryItemList)
-                .forEach(categoryItem -> categoryItem.addCategory(this));
-    }
-
-
 }

@@ -5,12 +5,14 @@ import jpabook.jpashop.domains.member.Member;
 import jpabook.jpashop.domains.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class MemberService {
 
     private final MemberRepository memberRepository;
@@ -18,23 +20,17 @@ public class MemberService {
     /**
      * 회원 가입
      */
+    @Transactional
     public Long signUp(SignUpRequest request) {
         validateDuplicateMember(request.getAuthId());
 
-        //회원 저장
-        Member newMember = Member.builder()
-                .authId(request.getAuthId())
-                .authPassword(request.getPassword())
-                .name(request.getName())
-                .phone(request.getPhone())
-                .address(new Address(request.getCity(), request.getStreet(), request.getZipcode()))
-                .build();
-
+        Member newMember = request.toEntity();
         Long memberId = memberRepository.save(newMember).getId();
 
         return memberId;
     }
 
+    //DB의 authId를 유니크 제약조건으로 걸어주는 것이 좋다. 나중에 배워서 할 것!
     private void validateDuplicateMember(String authId) {
         Optional<Member> findMember = memberRepository.findByAuthId(authId);
 
