@@ -65,8 +65,8 @@ public class OrderService {
                 .build();
         order.changeDelivery(delivery);
         //Todo 이 밑에꺼는 뭔가 이상할수 있다.
-        orderItemList.stream()
-                .forEach(orderItem -> order.addOrderItem(orderItem));
+//        orderItemList.stream()
+//                .forEach(orderItem -> order.addOrderItem(orderItem));
 
         // 주문 저장
         return orderRepository.save(order).getId();
@@ -83,7 +83,7 @@ public class OrderService {
     }
 
     /** 주문 검색*/
-//    public List<Order> searchOrders(OrderSearch orderSearch) {
-//        return orderRepository.findAll(orderSearch);
-//    }
+    public List<Order> searchOrders(OrderSearch orderSearch) {
+        return orderRepository.findByOrderSearch(orderSearch.getOrderStatus(), orderSearch.getMemberName());
+    }
 }

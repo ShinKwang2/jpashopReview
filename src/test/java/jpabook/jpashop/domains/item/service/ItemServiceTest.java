@@ -3,6 +3,7 @@ package jpabook.jpashop.domains.item.service;
 
 import jpabook.jpashop.domains.item.Item;
 import jpabook.jpashop.domains.item.ItemRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
@@ -24,6 +25,7 @@ class ItemServiceTest {
 
     @Test
     void 아이템_추가() throws Exception {
+
         //given
         AddItemRequest addItemRequest = createAddItemRequest();
 
@@ -35,6 +37,7 @@ class ItemServiceTest {
 
         //then
         Mockito.verify(itemRepository, Mockito.atLeastOnce()).save(ArgumentMatchers.any(Item.class));
+        BDDMockito.then(itemRepository).should(Mockito.atLeastOnce()).save(ArgumentMatchers.any(Item.class));
      }
 
     @Test
